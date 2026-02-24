@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: write
-      contents: read
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
@@ -39,3 +39,20 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Update image tag in manifest
+        run: |
+          SHA_TAG="sha-$(echo ${{ github.sha }} | cut -c1-7)"
+          echo "Updating manifest to image tag: ${SHA_TAG}"
+          sed -i "s|image: ghcr.io/cobrahzz/myapp:.*|image: ghcr.io/cobrahzz/myapp:${SHA_TAG}|" ansible/manifests/deployment.yaml
+          grep "image:" ansible/manifests/deployment.yaml
+
+      - name: Commit and push manifest
+        run: |
+          SHA_TAG="sha-$(echo ${{ github.sha }} | cut -c1-7)"
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add ansible/manifests/deployment.yaml
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          git commit -m "ci: update image to ${SHA_TAG}"
+          git push origin HEAD:main

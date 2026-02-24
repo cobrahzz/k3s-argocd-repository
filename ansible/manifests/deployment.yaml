@@ -50,6 +50,8 @@ spec:
             limits:
               cpu: "500m"
               memory: "256Mi"
+      imagePullSecrets:
+        - name: ghcr-secret
       volumes:
         - name: db-storage
           persistentVolumeClaim:
