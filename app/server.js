@@ -33,4 +33,6 @@ app.delete('/api/cart/:userId', (req, res) => {
   res.json({ message: 'Order placed! Cart cleared.' });
 });
 
+// Run
 app.listen(PORT, () => console.log(`Shop running on http://0.0.0.0:${PORT}`));
+
