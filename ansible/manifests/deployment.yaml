@@ -21,7 +21,7 @@ spec:
         kubernetes.io/hostname: k3s-server-1
       containers:
         - name: shop-app
-          image: ghcr.io/cobrahzz/myapp:sha-59ad2fa
+          image: ghcr.io/cobrahzz/myapp:sha-a08d348
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
